@@ -1,0 +1,50 @@
+.generator-section{
+    width: 100%;
+}
+
+.filter-bar{
+    width : 25%;
+    align-items: center;
+    margin-left: 3%;
+    padding: 3%;
+    background-color: aliceblue;
+}
+
+.muscle-bar{
+    height: 250px;
+    width: 150px;
+    overflow-y: auto;
+}
+
+.equipment-bar{
+    height: 150px;
+    width: 150px;
+    overflow-y: auto;
+}
+
+.category-space{
+    margin-bottom: 60px;
+}
+
+.category-header{
+    font-size: 20px;
+}
+
+.about-section{
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    background-color: aliceblue;
+    align-content: center;
+    padding: 3%;
+}
+
+.about-main-header{
+    font-size: 35px;
+}
+
+.about-header{
+    font-size: 28px;
+}
