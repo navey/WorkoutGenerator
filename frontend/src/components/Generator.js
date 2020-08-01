@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 import { FormControl, FormLabel, FormGroup, FormControlLabel, Checkbox, Button, TextField} from '@material-ui/core';
 
@@ -20,10 +21,11 @@ export default class Generator extends React.Component {
                 Bench : false,
                 Barbell : false,
                 Dumbbell: false,
-            }
+            },
         }
         this.updateMuscleState = this.updateMuscleState.bind(this);
         this.updateEquipmentState = this.updateEquipmentState.bind(this);
+        this.queryResults = this.queryResults.bind(this);
     }
 
     updateMuscleState(event){
@@ -36,6 +38,34 @@ export default class Generator extends React.Component {
         var equipment = {...this.state.equipment}
         equipment[event.target.name] = !equipment[event.target.name];
         this.setState({equipment})
+    }
+
+    queryResults(){
+        let axiosGET = []; // hold all GET requests
+        let htmlResults = "<h1> No exercises found. </h1>"; // default text for generator
+        // iterate through all states to check is any muscle was selected
+        // if so, add a GET request
+        for(let muscle in this.state.muscles){
+            if (this.state.muscles[muscle] > 0){
+                console.log(`/api/exercise/search?muscleGroup=${muscle}`); // console log for debugging
+                axiosGET.push(axios.get(`/api/exercise/search?muscleGroup=${muscle}`)); // add new GET request to my REST API
+            }
+        }
+        // perform all GET requests for the selected muscles
+        // then, display all exercises
+        axios.all(axiosGET)
+        .then(response => {
+            // iterate through all responses
+            for(let i = 0; i < response.length; i++){
+                if(i === 0) htmlResults = ""; // remove default message if at least one exercise exists
+                // iterate through all exercises given from the response
+                for(let j = 0; j < response[i].data.length; j++){
+                    htmlResults += `<h1> ${response[i].data[j]['exercise_name']} </h1> <br/>`;
+                }
+            }
+            document.getElementById('muscle-generate').innerHTML = htmlResults;
+        })
+        .catch(error => console.log(error));
     }
 
     render(){
@@ -75,8 +105,11 @@ export default class Generator extends React.Component {
                             </div>
                         </FormGroup>
 
-                        <Button variant="contained" color="primary">Generate</Button>
+                        <Button variant="contained" color="primary" onClick={this.queryResults}>Generate</Button>
                     </FormControl>
+                </div>
+                <div className='generator-results'>
+                    <p id="muscle-generate"></p>
                 </div>
             </div>
         );

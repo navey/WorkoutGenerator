@@ -1,5 +1,7 @@
 .generator-section{
     width: 100%;
+    margin-bottom: 5%;
+    overflow: auto;
 }
 
 .filter-bar{
@@ -7,6 +9,18 @@
     align-items: center;
     margin-left: 3%;
     padding: 3%;
+    height: 725px;
+    float: left;
+    background-color: aliceblue;
+}
+
+.generator-results{
+    width : 65%;
+    padding: 3%;
+    height: 725px;
+    margin-left: 5%;
+    float: left;
+    overflow-y: auto;
     background-color: aliceblue;
 }
 
@@ -38,6 +52,7 @@
     margin-bottom: 5%;
     background-color: aliceblue;
     align-content: center;
+    clear: both;
     padding: 3%;
 }
 
