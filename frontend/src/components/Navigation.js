@@ -3,7 +3,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid'
+import Grid from '@material-ui/core/Grid';
+import { Link } from 'react-scroll';
 
 export default class Navigation extends React.Component {
     
@@ -25,10 +26,28 @@ export default class Navigation extends React.Component {
                         <Grid item>
                             <div>
                             <Button raised color="inherit" >
-                                Generator
+                                <Link
+                                    activeClass="active"
+                                    to="generator"
+                                    spy={true}
+                                    smooth={true}
+                                    offset={-10}
+                                    duration={500}
+                                    >
+                                    Generator
+                                </Link>
                             </Button>
                             <Button raised color="inherit" >
-                                About
+                                <Link
+                                    activeClass="active"
+                                    to="about"
+                                    spy={true}
+                                    smooth={true}
+                                    offset={-10}
+                                    duration={500}
+                                    >
+                                    About
+                                </Link>
                             </Button>
                             </div>
                         </Grid>
