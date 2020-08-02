@@ -63,3 +63,15 @@
 .about-header{
     font-size: 28px;
 }
+
+.admin-form{
+    text-align: center;
+    padding: 20px;
+    margin-top: 5%;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-bottom: 10%;
+    background-color: lightblue;
+    border-radius: 8px;
+    animation: fade 2s;
+}

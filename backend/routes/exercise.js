@@ -40,7 +40,7 @@ router.get("/:id", (req, res) => {
         }
         res.json(rows);
     })
-    console.log(`Connected to /exercises/${req.params.id}`);
+    console.log(`Connected to /exercises/${[req.params.id]}`);
 });
 
 module.exports = router;

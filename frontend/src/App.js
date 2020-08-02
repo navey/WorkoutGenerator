@@ -1,9 +1,11 @@
 import React from 'react';
+import {
+  Route,
+  HashRouter
+} from "react-router-dom";
 
-import Navigation from './components/Navigation';
-import Home from './components/Home';
-import Generator from './components/Generator';
-import About from './components/About';
+import User from './components/User';
+import Admin from './components/Admin';
 
 import './App.css';
 import './generatorStyle.css';
@@ -13,10 +15,10 @@ class App extends React.Component {
   render(){
     return (
       <div className="App">
-        <Navigation />
-        <Home />
-        <Generator />
-        <About />
+        <HashRouter>
+          <Route exact path='/' component={User} />
+          <Route path='/admin' component={Admin} />
+        </HashRouter>
       </div>
     );
   }

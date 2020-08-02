@@ -13,13 +13,13 @@ export default class Navigation extends React.Component {
             <AppBar position="static">
                 <Toolbar>
                     <Grid
-                    justify="space-between" // Add it here :)
+                    justify="space-between" 
                     container 
                     spacing={24}
                     >
                         <Grid item>
                             <Typography variant="h6" color="inherit">
-                            Workout Generator
+                                Workout Generator
                             </Typography>
                         </Grid>
 
