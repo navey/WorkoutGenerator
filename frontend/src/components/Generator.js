@@ -18,9 +18,9 @@ export default class Generator extends React.Component {
                 LowerBack: 0
             },
             equipment : {
-                Bench : false,
-                Barbell : false,
-                Dumbbell: false,
+                Bench : true,
+                Barbell : true,
+                Dumbbell: true,
             },
         }
         this.updateMuscleState = this.updateMuscleState.bind(this);
@@ -29,18 +29,19 @@ export default class Generator extends React.Component {
     }
 
     updateMuscleState(event){
-        var muscles = {...this.state.muscles}
+        var muscles = {...this.state.muscles};
         muscles[event.target.id] = event.target.value;
-        this.setState({muscles})
+        this.setState({muscles});
     }
 
     updateEquipmentState(event){
-        var equipment = {...this.state.equipment}
+        var equipment = {...this.state.equipment};
         equipment[event.target.name] = !equipment[event.target.name];
-        this.setState({equipment})
+        this.setState({equipment});
     }
 
     queryResults(){
+        console.log("Sending GET request for query...");
         let axiosGET = []; // hold all GET requests
         let htmlResults = "<h1> No exercises found. </h1>"; // default text for generator
         // iterate through all states to check is any muscle was selected
@@ -66,6 +67,7 @@ export default class Generator extends React.Component {
             document.getElementById('muscle-generate').innerHTML = htmlResults;
         })
         .catch(error => console.log(error));
+        console.log("GET request for query complete");
     }
 
     render(){
@@ -76,14 +78,14 @@ export default class Generator extends React.Component {
                         <FormLabel component="legend"><h1 className="category-header">Muscle Group</h1></FormLabel>
                         <FormGroup className="category-space">
                             <div className="muscle-bar">
-                                <TextField required id="Chest" label="Chest" defaultValue="0" onChange={this.updateMuscleState}/><br/><br/>
-                                <TextField required id="Shoulders" label="Shoulders" defaultValue="0" onChange={this.updateMuscleState}/><br/><br/>
-                                <TextField required id="Triceps" label="Triceps" defaultValue="0" onChange={this.updateMuscleState}/><br/><br/>
-                                <TextField required id="Biceps" label="Biceps" defaultValue="0" onChange={this.updateMuscleState}/><br/><br/>
-                                <TextField required id="Traps" label="Traps" defaultValue="0" onChange={this.updateMuscleState}/><br/><br/>
-                                <TextField required id="Lats" label="Lats" defaultValue="0" onChange={this.updateMuscleState}/><br/><br/>
-                                <TextField required id="MiddleBack" label="Middle Back" defaultValue="0" onChange={this.updateMuscleState}/><br/><br/>
-                                <TextField required id="LowerBack" label="Lower Back" defaultValue="0" onChange={this.updateMuscleState}/><br/><br/>
+                                <TextField required id="Chest" label="Chest" onChange={this.updateMuscleState}/><br/><br/>
+                                <TextField required id="Shoulders" label="Shoulders" onChange={this.updateMuscleState}/><br/><br/>
+                                <TextField required id="Triceps" label="Triceps" onChange={this.updateMuscleState}/><br/><br/>
+                                <TextField required id="Biceps" label="Biceps" onChange={this.updateMuscleState}/><br/><br/>
+                                <TextField required id="Traps" label="Traps" onChange={this.updateMuscleState}/><br/><br/>
+                                <TextField required id="Lats" label="Lats" onChange={this.updateMuscleState}/><br/><br/>
+                                <TextField required id="MiddleBack" label="Middle Back" onChange={this.updateMuscleState}/><br/><br/>
+                                <TextField required id="LowerBack" label="Lower Back" onChange={this.updateMuscleState}/><br/><br/>
                             </div>
                         </FormGroup>
 
