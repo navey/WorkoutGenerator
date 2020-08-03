@@ -60,7 +60,6 @@ router.post("/create_equipment", (req, res) => {
 
 // Delete equipment from database
 router.delete("/delete_equipment/:id", (req, res) => {
-    console.log("Equipment: " + req.params.id);
     let queryString = "DELETE FROM Equipment WHERE equipment_id = ?";
     dbConnection.query(queryString, [req.params.id], (error) => {
         if(error){
@@ -70,7 +69,7 @@ router.delete("/delete_equipment/:id", (req, res) => {
         else{
             console.log(req.params.id + " was deleted from the Database");
         }
-    })
+    });
     
     res.end();
 });

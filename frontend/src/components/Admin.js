@@ -8,12 +8,16 @@ export default class Admin extends React.Component {
         super(props);
         this.state = {
             equipment : [],
+            exercises : [],
             postAddExercise : {
                 exerciseName: "",
                 muscleGroup: "",
-                equipFirst: "None",
-                equipSecond: "None",
-                equipThird: "None"
+                equipFirst: "0",
+                equipSecond: "0",
+                equipThird: "0"
+            },
+            deleteExercise : {
+                exerciseName : ""
             },
             newEquipment : {
                 equipmentName : ""
@@ -24,6 +28,8 @@ export default class Admin extends React.Component {
         };
         this.addExercise = this.addExercise.bind(this);
         this.updateAddExerciseState = this.updateAddExerciseState.bind(this);
+        this.deleteExercise = this.deleteExercise.bind(this);
+        this.updateDeleteExercise = this.updateDeleteExercise.bind(this);
         this.addEquipment = this.addEquipment.bind(this);
         this.updateAddEquipment = this.updateAddEquipment.bind(this);
         this.deleteEquipment = this.deleteEquipment.bind(this);
@@ -31,10 +37,14 @@ export default class Admin extends React.Component {
     }
 
     componentDidMount(){
-        axios.get('/api/equipment/')
+        axios.all([
+            axios.get('/api/exercise/'),
+            axios.get('/api/equipment/')
+        ])
         .then(response => {
             this.setState({
-                equipment : response.data
+                exercises : response[0].data,
+                equipment : response[1].data
             });
         })
         .catch((error) => {
@@ -54,6 +64,20 @@ export default class Admin extends React.Component {
         var exercises = {...this.state.postAddExercise};
         exercises[event.target.name] = event.target.value;
         this.setState({postAddExercise : exercises});
+    }
+
+    deleteExercise(){
+        console.log("Sending Delete request...");
+        console.log(this.state.deleteExercise.exerciseName);
+        axios.delete('/api/exercise/delete_exercise/' + this.state.deleteExercise.exerciseName)
+        .then(() => console.log("DELETE requested completed."))
+        .catch(error => console.log(error));
+    }
+
+    updateDeleteExercise(event){
+        var exercises = {...this.state.deleteExercise};
+        exercises[event.target.name] = event.target.value;
+        this.setState({deleteExercise : exercises});
     }
 
     addEquipment(){
@@ -131,10 +155,10 @@ export default class Admin extends React.Component {
                         labelId="equip1Label"
                         id="equipFirst"
                         name="equipFirst"
-                        defaultValue = "None"
+                        defaultValue = "0"
                         onChange={this.updateAddExerciseState}
                     >
-                        <MenuItem value="None">None</MenuItem>
+                        <MenuItem value="0">None</MenuItem>
                         {
                             this.state.equipment.map(val => {
                                 return <MenuItem key={val.equipment_name} value={val.equipment_id}>{val.equipment_name}</MenuItem>
@@ -147,10 +171,10 @@ export default class Admin extends React.Component {
                         labelId="equip2Label"
                         id="equipSecond"
                         name="equipSecond"
-                        defaultValue = "None"
+                        defaultValue = "0"
                         onChange={this.updateAddExerciseState}
                     >
-                        <MenuItem value="None">None</MenuItem>
+                        <MenuItem value="0">None</MenuItem>
                         {
                             this.state.equipment.map(val => {
                                 return <MenuItem key={val.equipment_name} value={val.equipment_id}>{val.equipment_name}</MenuItem>
@@ -164,10 +188,10 @@ export default class Admin extends React.Component {
                         labelId="equip3Label"
                         id="equipThird"
                         name="equipThird"
-                        defaultValue = "None"
+                        defaultValue = "0"
                         onChange={this.updateAddExerciseState}
                     >
-                        <MenuItem value="None">None</MenuItem>
+                        <MenuItem value="0">None</MenuItem>
                         {
                             this.state.equipment.map(val => {
                                 return <MenuItem key={val.equipment_name} value={val.equipment_id}>{val.equipment_name}</MenuItem>
@@ -177,6 +201,30 @@ export default class Admin extends React.Component {
                     <br /><br />
 
                     <Button variant="contained" onClick={this.addExercise}>
+                        Submit
+                    </Button>
+                </form>
+
+                <form className="admin-form">
+                    <h1> Delete Exercise: </h1>
+                    <InputLabel id="deleteExerciseLabel">Exercise</InputLabel>
+                    <Select
+                        labelId="deleteExerciseLabel"
+                        id="exerciseName"
+                        name="exerciseName"
+                        defaultValue = "0"
+                        onChange={this.updateDeleteExercise}
+                    >
+                        <MenuItem value="0">None</MenuItem>
+                        {
+                            this.state.exercises.map(val => {
+                                return <MenuItem key={val.exercise_name} value={val.exercise_id}>{val.exercise_name}</MenuItem>
+                            })
+                        }
+                    </Select>
+                    <br /><br />
+
+                    <Button variant="contained" onClick={this.deleteExercise}>
                         Submit
                     </Button>
                 </form>
@@ -210,10 +258,10 @@ export default class Admin extends React.Component {
                         labelId="deleteEquipLabel"
                         id="equipmentName"
                         name="equipmentName"
-                        defaultValue = "None"
+                        defaultValue = "0"
                         onChange={this.updateDeleteEquipment}
                     >
-                        <MenuItem value="None">None</MenuItem>
+                        <MenuItem value="0">None</MenuItem>
                         {
                             this.state.equipment.map(val => {
                                 return <MenuItem key={val.equipment_name} value={val.equipment_id}>{val.equipment_name}</MenuItem>

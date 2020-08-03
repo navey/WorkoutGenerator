@@ -51,13 +51,91 @@ router.get("/:id", (req, res) => {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // POST
 
-// Insert new exercise into database
+// Insert new exercise and all exercise_equipment relationships into database
 router.post("/create_exercise", (req, res) => {
-    console.log("Exercise Name: " + req.body.exerciseName);
-    console.log("Muscle Group: " + req.body.muscleGroup);
-    console.log("First Equipment: " + req.body.equipFirst);
-    console.log("Second Equipment: " + req.body.equipSecond);
-    console.log("Third Equipment: " + req.body.equipThird);
+    let queryString = "INSERT INTO Exercise (exercise_name, muscle_group) VALUES (?, ?);";
+    dbConnection.query(queryString, [req.body.exerciseName, req.body.muscleGroup], (error) => {
+        if(error){
+            res.sendStatus(404);
+            return;
+        }
+        else{
+            console.log(req.body.exerciseName + " was added to the database.");
+        }
+    });
+
+    queryString = "SELECT exercise_id FROM Exercise WHERE exercise_name = ?;";
+    let exercise_id = 0;
+    dbConnection.query(queryString, [req.body.exerciseName], (error, rows) => {
+        if(error){
+            res.sendStatus(404);
+            return;
+        }
+        else{
+            exercise_id = rows[0].exercise_id;
+        }
+
+        if(exercise_id > 0){
+            if(req.body.equipFirst != 0){
+                let firstQuery = "INSERT INTO Exercise_Equipment (exercise_id, equipment_id) VALUES (?, ?);";
+                dbConnection.query(firstQuery, [exercise_id, req.body.equipFirst], (error) => {
+                    if(error){
+                        console.log(error);
+                        return;
+                    }
+                    else{
+                        console.log("   First Exercise_Equipment was added to the database.");   
+                    }
+                });
+            }
+            if(req.body.equipSecond != 0){
+                let secondQuery = "INSERT INTO Exercise_Equipment (exercise_id, equipment_id) VALUES (?, ?);";
+                dbConnection.query(secondQuery, [exercise_id, req.body.equipSecond], (error) => {
+                    if(error){
+                        console.log(error);
+                        return;
+                    }
+                    else{
+                        console.log("   Second Exercise_Equipment was added to the database.");   
+                    }
+                });
+            }
+            if(req.body.equipThird != 0){
+                let thirdQuery = "INSERT INTO Exercise_Equipment (exercise_id, equipment_id) VALUES (?, ?);";
+                dbConnection.query(thirdQuery, [exercise_id, req.body.equipThird], (error) => {
+                    if(error){
+                        console.log(error);
+                        return;
+                    }
+                    else{
+                        console.log("   Third Exercise_Equipment was added to the database.");   
+                    }
+                });
+            }
+        }
+        else{
+            return;
+        }
+    });
+
+    res.end();
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// DELETE
+
+// Delete exercise from database
+router.delete("/delete_exercise/:id", (req, res) => {
+    let queryString = "DELETE FROM Exercise WHERE exercise_id = ?";
+    dbConnection.query(queryString, [req.params.id], (error) => {
+        if(error){
+            res.send(404);
+            return;
+        }
+        else{
+            console.log(req.params.id + " was deleted from the Database.");
+        }
+    });
     
     res.end();
 });
