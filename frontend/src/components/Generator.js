@@ -15,7 +15,10 @@ export default class Generator extends React.Component {
                 Traps : 0,
                 Lats: 0,
                 MiddleBack: 0,
-                LowerBack: 0
+                LowerBack: 0,
+                Quads: 0,
+                Hamstring: 0,
+                Calves: 0
             },
             equipment : {
                 Bench : true,
@@ -43,6 +46,7 @@ export default class Generator extends React.Component {
     queryResults(){
         console.log("Sending GET request for query...");
         let axiosGET = []; // hold all GET requests
+        let muscleGroups = [];
         let htmlResults = "<h1> No exercises found. </h1>"; // default text for generator
         // iterate through all states to check is any muscle was selected
         // if so, add a GET request
@@ -50,6 +54,7 @@ export default class Generator extends React.Component {
             if (this.state.muscles[muscle] > 0){
                 console.log(`/api/exercise/search?muscleGroup=${muscle}`); // console log for debugging
                 axiosGET.push(axios.get(`/api/exercise/search?muscleGroup=${muscle}`)); // add new GET request to my REST API
+                muscleGroups.push(muscle);
             }
         }
         // perform all GET requests for the selected muscles
@@ -59,9 +64,20 @@ export default class Generator extends React.Component {
             // iterate through all responses
             for(let i = 0; i < response.length; i++){
                 if(i === 0) htmlResults = ""; // remove default message if at least one exercise exists
-                // iterate through all exercises given from the response
-                for(let j = 0; j < response[i].data.length; j++){
-                    htmlResults += `<h1> ${response[i].data[j]['exercise_name']} </h1> <br/>`;
+                let numOfExercises = this.state.muscles[muscleGroups[i]]; // get the number of exercises requested for the muscle group
+                // if user requests more exercises than available, give all exercises available 
+                if(numOfExercises >= response[i].data.length){
+                    for(let j = 0; j < response[i].data.length; j++){
+                        htmlResults += `<h1> ${response[i].data[j]['exercise_name']} - ${response[i].data[j]['muscle_group']} </h1> <br/>`;
+                    }
+                }
+                // else give random exercises from the query result
+                else{
+                    for(let j = 0; j < numOfExercises; j++){
+                        let index = Math.floor(Math.random() * response[i].data.length); // get random index
+                        let selectedExercise = response[i].data.splice(index, 1); // remove the exercise after being selected
+                        htmlResults += `<h1> ${selectedExercise[0]['exercise_name']} - ${selectedExercise[0]['muscle_group']} </h1> <br/>`;
+                    }
                 }
             }
             document.getElementById('muscle-generate').innerHTML = htmlResults;
@@ -86,6 +102,9 @@ export default class Generator extends React.Component {
                                 <TextField required id="Lats" label="Lats" onChange={this.updateMuscleState}/><br/><br/>
                                 <TextField required id="MiddleBack" label="Middle Back" onChange={this.updateMuscleState}/><br/><br/>
                                 <TextField required id="LowerBack" label="Lower Back" onChange={this.updateMuscleState}/><br/><br/>
+                                <TextField required id="Quads" label="Quads" onChange={this.updateMuscleState}/><br/><br/>
+                                <TextField required id="Hamstring" label="Hamstring" onChange={this.updateMuscleState}/><br/><br/>
+                                <TextField required id="Calves" label="Calves" onChange={this.updateMuscleState}/><br/><br/>
                             </div>
                         </FormGroup>
 
