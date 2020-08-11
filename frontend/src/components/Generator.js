@@ -20,15 +20,27 @@ export default class Generator extends React.Component {
                 Hamstring: 0,
                 Calves: 0
             },
-            equipment : {
-                Bench : true,
-                Barbell : true,
-                Dumbbell: true,
-            },
+            equipmentList : [],
+            equipment : {}
         }
         this.updateMuscleState = this.updateMuscleState.bind(this);
         this.updateEquipmentState = this.updateEquipmentState.bind(this);
         this.queryResults = this.queryResults.bind(this);
+    }
+
+    componentDidMount(){
+        axios.get("/api/equipment")
+        .then(response => {
+            for(let item in response.data){
+                this.setState(prevState => ({
+                    equipment : {...prevState.equipment, [response.data[item].equipment_name] : true}
+                }));
+            }
+            this.setState({
+                equipmentList : response.data
+            });
+        })
+        .catch(error => console.log(error));
     }
 
     updateMuscleState(event){
@@ -48,12 +60,19 @@ export default class Generator extends React.Component {
         let axiosGET = []; // hold all GET requests
         let muscleGroups = [];
         let htmlResults = "<h1> No exercises found. </h1>"; // default text for generator
+        // iterate through all equipment states to see which equipment to blacklist
+        let exEquipment = "";
+        for(let equipment in this.state.equipment){
+            if(!this.state.equipment[equipment]){
+                exEquipment += `&exEquipment[]=${equipment}`;
+            }
+        }
         // iterate through all states to check is any muscle was selected
         // if so, add a GET request
         for(let muscle in this.state.muscles){
             if (this.state.muscles[muscle] > 0){
-                console.log(`/api/exercise/search?muscleGroup=${muscle}`); // console log for debugging
-                axiosGET.push(axios.get(`/api/exercise/search?muscleGroup=${muscle}`)); // add new GET request to my REST API
+                console.log(`/api/exercise/search?muscleGroup=${muscle}${exEquipment}`); // console log for debugging
+                axiosGET.push(axios.get(`/api/exercise/search?muscleGroup=${muscle}${exEquipment}`)); // add new GET request to my REST API
                 muscleGroups.push(muscle);
             }
         }
@@ -111,18 +130,15 @@ export default class Generator extends React.Component {
                         <FormLabel component="legend"><h1 className="category-header">Equipment</h1></FormLabel>
                         <FormGroup className="category-space">
                             <div className="equipment-bar">
-                                <FormControlLabel
-                                    control={<Checkbox checked={this.state.equipment.Bench} onChange={this.updateEquipmentState} name="Bench" />}
-                                    label="Bench"
-                                />
-                                <FormControlLabel
-                                    control={<Checkbox checked={this.state.equipment.Barbell} onChange={this.updateEquipmentState} name="Barbell" />}
-                                    label="Barbell"
-                                />
-                                <FormControlLabel
-                                    control={<Checkbox checked={this.state.equipment.Dumbbell} onChange={this.updateEquipmentState} name="Dumbbell" />}
-                                    label="Dumbbell"
-                                />
+                                {
+                                    this.state.equipmentList.map(val => {
+                                        return  <FormControlLabel
+                                                    key = {val.equipment_name}
+                                                    control={<Checkbox checked={this.state.equipment[val.equipment_name]} onChange={this.updateEquipmentState} name={val.equipment_name} />}
+                                                    label={val.equipment_name}
+                                                />
+                                    })
+                                }
                             </div>
                         </FormGroup>
 

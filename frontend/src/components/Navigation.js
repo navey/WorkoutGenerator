@@ -15,7 +15,7 @@ export default class Navigation extends React.Component {
                     <Grid
                     justify="space-between" 
                     container 
-                    spacing={24}
+                    spacing={10}
                     >
                         <Grid item>
                             <Typography variant="h6" color="inherit">
@@ -25,7 +25,7 @@ export default class Navigation extends React.Component {
 
                         <Grid item>
                             <div>
-                            <Button raised color="inherit" >
+                            <Button raised="true" color="inherit" >
                                 <Link
                                     activeClass="active"
                                     to="generator"
@@ -37,7 +37,7 @@ export default class Navigation extends React.Component {
                                     Generator
                                 </Link>
                             </Button>
-                            <Button raised color="inherit" >
+                            <Button raised="true" color="inherit" >
                                 <Link
                                     activeClass="active"
                                     to="about"

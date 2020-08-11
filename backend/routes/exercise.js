@@ -22,12 +22,58 @@ router.get("/", (req, res) => {
     console.log('Connected to /exercises');
 });
 
+/*
+select *
+from Exercise as Ec
+where Ec.muscleGroup = ?
+and not exists(
+    select *
+    from exercise_equipment as Ee
+    join equipment E on Ee.equipment_id = E.equipment_id
+    where Ec.exercise_id = exercise_id
+    and (
+        equipment_name = ?
+        or equipment_name = ?
+    )
+)
+
+*/
+
 // Query Exercises from specific Muscle Group
 router.get("/search", (req, res) => {
-    let queryString = "SELECT * FROM Exercise WHERE muscle_group = ? ";
+    let queryString = "";
+    if(req.query.exEquipment !== undefined){
+        queryString = "SELECT * " + 
+                            "FROM Exercise AS Ec " + 
+                            "WHERE Ec.muscle_group = ? " +
+                            "AND NOT EXISTS (" +
+                            "SELECT * " +
+                            "FROM Exercise_Equipment as Ee " +
+                            "JOIN Equipment E ON Ee.equipment_id = E.equipment_id " +
+                            "WHERE Ec.exercise_id = exercise_id ";
+        for(let i = 0; i < req.query.exEquipment.length; i++){
+            if(i == 0)
+                queryString += `AND (equipment_name = "${req.query.exEquipment[i]}" `;
+            else
+                queryString += `OR equipment_name = "${req.query.exEquipment[i]}" `;
+            
+            if(i == req.query.exEquipment.length-1)
+                queryString += ")"
+        }
+
+        queryString += ")"
+    }
+    else{
+        queryString = "SELECT * " + 
+                        "FROM Exercise AS Ec " + 
+                        "WHERE Ec.muscle_group = ? ";
+    }
+
+
     dbConnection.query(queryString, [req.query.muscleGroup], (error, rows, fields) => {
         if(error){
             res.sendStatus(500);
+            console.log(error);
             return
         }
         res.json(rows);
