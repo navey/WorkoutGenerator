@@ -22,23 +22,6 @@ router.get("/", (req, res) => {
     console.log('Connected to /exercises');
 });
 
-/*
-select *
-from Exercise as Ec
-where Ec.muscleGroup = ?
-and not exists(
-    select *
-    from exercise_equipment as Ee
-    join equipment E on Ee.equipment_id = E.equipment_id
-    where Ec.exercise_id = exercise_id
-    and (
-        equipment_name = ?
-        or equipment_name = ?
-    )
-)
-
-*/
-
 // Query Exercises from specific Muscle Group
 router.get("/search", (req, res) => {
     let queryString = "";

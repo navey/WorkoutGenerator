@@ -5,7 +5,7 @@
 }
 
 .filter-bar{
-    width : 25%;
+    width : 250px;
     align-items: center;
     margin-left: 3%;
     padding: 3%;
@@ -22,6 +22,40 @@
     float: left;
     overflow-y: auto;
     background-color: aliceblue;
+}
+
+.filter-bar-mobile{
+    width : 25%;
+    align-items: center;
+    margin-left: 3%;
+    padding: 3%;
+    height: 725px;
+    background-color: aliceblue;
+}
+
+.generator-results-mobile{
+    width : 65%;
+    padding: 3%;
+    height: 725px;
+    margin-left: 5%;
+    overflow-y: auto;
+    background-color: aliceblue;
+}
+
+@media only screen and (max-width: 800px) {
+    .filter-bar{
+        float : none;
+        margin-left : auto;
+        margin-right : auto;
+        margin-bottom : 10px
+    }
+    
+    .generator-results{
+        float : none;
+        margin-left : auto;
+        margin-right : auto;
+        margin-bottom : 10px
+    }
 }
 
 .muscle-bar{
